@@ -1,0 +1,48 @@
+{
+ "name": "探边界 · 封闭平台（搜索 → 抓取）",
+ "type": "probe",
+ "desc": "每题先 Search，看平台内容有没有被收录、新不新（expect_domain / expect_after）；再把搜到的该平台链接取前 3 条逐个 Fetch，看能不能拿到正文、会不会被登录墙或验证页拦住。L1 = 用 site: 硬限定，看有没有收录；L2 = 不加 site:，看自然排序下能不能排上来；L3 = 限定近期，看收录新不新。",
+ "fetch_top": 3,
+ "items": [
+  {"group": "微信公众号", "level": "L1", "query": "site:mp.weixin.qq.com 大模型 应用", "expect_domain": ["mp.weixin.qq.com"]},
+  {"group": "微信公众号", "level": "L2", "query": "公众号文章 DeepSeek 使用教程", "expect_domain": ["mp.weixin.qq.com"]},
+  {"group": "微信公众号", "level": "L3", "query": "site:mp.weixin.qq.com AI after:2026-09-01", "expect_domain": ["mp.weixin.qq.com"], "expect_after": "2026-09-01"},
+
+  {"group": "小红书", "level": "L1", "query": "site:xiaohongshu.com 露营装备清单", "expect_domain": ["xiaohongshu.com", "xhslink.com"]},
+  {"group": "小红书", "level": "L2", "query": "小红书 成都 美食 推荐 笔记", "expect_domain": ["xiaohongshu.com", "xhslink.com"]},
+  {"group": "小红书", "level": "L3", "query": "site:xiaohongshu.com 穿搭 after:2026-09-01", "expect_domain": ["xiaohongshu.com", "xhslink.com"], "expect_after": "2026-09-01"},
+
+  {"group": "知乎", "level": "L1", "query": "site:zhihu.com 如何评价 DeepSeek", "expect_domain": ["zhihu.com"]},
+  {"group": "知乎", "level": "L2", "query": "程序员 35 岁 危机 怎么看", "expect_domain": ["zhihu.com"]},
+  {"group": "知乎", "level": "L3", "query": "site:zhuanlan.zhihu.com 大模型 after:2026-09-01", "expect_domain": ["zhuanlan.zhihu.com"], "expect_after": "2026-09-01"},
+
+  {"group": "抖音", "level": "L1", "query": "site:douyin.com 做饭 教程", "expect_domain": ["douyin.com"]},
+  {"group": "抖音", "level": "L2", "query": "抖音 健身 教学 视频", "expect_domain": ["douyin.com"]},
+
+  {"group": "微博", "level": "L1", "query": "site:weibo.com 热搜", "expect_domain": ["weibo.com", "weibo.cn"]},
+  {"group": "微博", "level": "L2", "query": "微博 网友 热议 AI", "expect_domain": ["weibo.com", "weibo.cn"]},
+
+  {"group": "B站", "level": "L1", "query": "site:bilibili.com 机器学习 教程", "expect_domain": ["bilibili.com"]},
+  {"group": "B站", "level": "L2", "query": "B站 up主 大模型 原理 讲解", "expect_domain": ["bilibili.com"]},
+
+  {"group": "百家号/头条", "level": "L1", "query": "site:baijiahao.baidu.com 新能源汽车", "expect_domain": ["baijiahao.baidu.com"]},
+  {"group": "百家号/头条", "level": "L1", "query": "site:toutiao.com 新能源汽车", "expect_domain": ["toutiao.com"]},
+
+  {"group": "豆瓣", "level": "L1", "query": "site:douban.com 小组 租房", "expect_domain": ["douban.com"]},
+  {"group": "豆瓣", "level": "L2", "query": "豆瓣 书评 百年孤独", "expect_domain": ["douban.com"]},
+
+  {"group": "海外·X", "level": "L1", "query": "site:x.com AnthropicAI", "expect_domain": ["x.com", "twitter.com"]},
+  {"group": "海外·X", "level": "L2", "query": "Karpathy tweet on vibe coding", "expect_domain": ["x.com", "twitter.com"]},
+
+  {"group": "海外·Reddit", "level": "L1", "query": "site:reddit.com LocalLLaMA best model", "expect_domain": ["reddit.com"]},
+  {"group": "海外·Reddit", "level": "L2", "query": "reddit thread best budget mechanical keyboard", "expect_domain": ["reddit.com"]},
+
+  {"group": "海外·Instagram/FB", "level": "L1", "query": "site:instagram.com nasa", "expect_domain": ["instagram.com"]},
+  {"group": "海外·Instagram/FB", "level": "L1", "query": "site:facebook.com NASA", "expect_domain": ["facebook.com"]},
+
+  {"group": "海外·LinkedIn", "level": "L1", "query": "site:linkedin.com Anthropic", "expect_domain": ["linkedin.com"]},
+
+  {"group": "海外·Medium/Substack", "level": "L1", "query": "site:medium.com LLM agents", "expect_domain": ["medium.com"]},
+  {"group": "海外·Medium/Substack", "level": "L1", "query": "site:substack.com AI newsletter", "expect_domain": ["substack.com"]}
+ ]
+}

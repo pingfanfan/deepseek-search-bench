@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeepSeek 搜索测试台</title>
+<style>
+:root {
+  --bg: #f6f6f3; --panel: #ffffff; --ink: #1b1b19; --muted: #6b6a64; --line: #e3e2dc;
+  --accent: #3b5bdb; --accent-soft: #e8ecfb; --ok: #2b8a3e; --ok-soft: #e6f4ea;
+  --bad: #c92a2a; --bad-soft: #fbeaea; --warn: #b26a00; --warn-soft: #fdf1dc;
+  --mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151514; --panel: #1e1e1c; --ink: #ecebe6; --muted: #9a9890; --line: #33322f;
+    --accent: #8fa6ff; --accent-soft: #252b44; --ok: #69c47f; --ok-soft: #1d2e22;
+    --bad: #ff8a8a; --bad-soft: #3a2020; --warn: #f0b45a; --warn-soft: #3a2f1c;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink);
+  font: 14px/1.55 -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 20px 16px 60px; }
+header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+h1 { font-size: 20px; margin: 0; letter-spacing: .2px; }
+.sub { color: var(--muted); font-size: 13px; }
+.pill { font-size: 12px; padding: 2px 8px; border-radius: 99px; }
+.pill.ok { background: var(--ok-soft); color: var(--ok); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+nav { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+nav button { background: none; border: 0; padding: 8px 14px; font: inherit; color: var(--muted);
+  cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+nav button.on { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; margin-bottom: 14px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); }
+input, select, textarea { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 8px; }
+input[type=number] { width: 72px; }
+textarea { width: 100%; font-family: var(--mono); font-size: 12px; min-height: 120px; }
+button.btn { font: inherit; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+  padding: 6px 14px; border-radius: 6px; cursor: pointer; }
+button.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.btn:disabled { opacity: .5; cursor: default; }
+.desc { color: var(--muted); font-size: 13px; margin-top: 8px; }
+.progress { height: 4px; background: var(--line); border-radius: 2px; overflow: hidden; margin-top: 12px; }
+.progress > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 500; font-size: 12px; white-space: nowrap; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.item { cursor: pointer; }
+tr.item:hover td { background: var(--accent-soft); }
+.trunc { max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag { display: inline-block; font-size: 12px; padding: 1px 7px; border-radius: 4px; white-space: nowrap; }
+.tag.ok { background: var(--ok-soft); color: var(--ok); }
+.tag.bad { background: var(--bad-soft); color: var(--bad); }
+.tag.warn { background: var(--warn-soft); color: var(--warn); }
+.tag.mute { background: var(--bg); color: var(--muted); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.card h3 { margin: 0 0 8px; font-size: 14px; }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; }
+.metric b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+.metric span { font-size: 12px; color: var(--muted); }
+.detail td { background: var(--bg); }
+.res { padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.res:last-child { border-bottom: 0; }
+.res a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.res .meta { font-size: 12px; color: var(--muted); }
+.res p { margin: 4px 0 0; font-size: 13px; }
+mark { background: var(--warn-soft); color: inherit; padding: 0 2px; border-radius: 2px; }
+pre { font-family: var(--mono); font-size: 12px; white-space: pre-wrap; word-break: break-word;
+  max-height: 420px; overflow: auto; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px; margin: 8px 0 0; }
+.toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+.toolbar .spacer { flex: 1; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.seg button { border: 0; background: var(--panel); color: var(--muted); padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; }
+.seg button.on { background: var(--accent-soft); color: var(--accent); }
+.hidden { display: none !important; }
+.empty { color: var(--muted); text-align: center; padding: 28px 0; }
+.scroll { overflow-x: auto; }
+details summary { cursor: pointer; color: var(--muted); font-size: 12px; margin-top: 8px; }
+@media (max-width: 640px) { .trunc { max-width: 160px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>DeepSeek Search / Fetch 测试台</h1>
+    <span id="keyPill" class="pill">检查 key…</span>
+    <span class="sub">按次计费 $0.75 / 千次成功请求，限流 5 QPS</span>
+  </header>
+
+  <nav>
+    <button data-tab="batch" class="on">批量测试</button>
+    <button data-tab="debug">单次调试</button>
+    <button data-tab="history">历史对比</button>
+  </nav>
+
+  <!-- 批量测试 -->
+  <section id="tab-batch">
+    <div class="panel">
+      <div class="row">
+        <label class="f">测试集
+          <select id="setSel"></select>
+        </label>
+        <label class="f">并发
+          <input id="conc" type="number" min="1" max="5" value="3">
+        </label>
+        <label class="f" id="countWrap">搜索条数 count
+          <input id="count" type="number" min="1" max="50" value="10">
+        </label>
+        <button class="btn primary" id="runBtn">开始测试</button>
+        <button class="btn" id="stopBtn" disabled>停止</button>
+        <span class="sub" id="costHint"></span>
+      </div>
+      <div id="customBox" class="hidden" style="margin-top:12px">
+        <div class="row" style="margin-bottom:8px">
+          <label class="f">类型
+            <select id="customType"><option value="search">search</option><option value="fetch">fetch</option><option value="probe">probe（搜索→抓取）</option></select>
+          </label>
+        </div>
+        <textarea id="customText" placeholder="每行一条。格式：分组 | 查询或URL | 期望关键词1,关键词2（可省略分组和关键词）
+英文 | Who discovered penicillin | Fleming
+https://www.reddit.com/r/programming/"></textarea>
+      </div>
+      <div class="desc" id="setDesc"></div>
+      <div class="progress"><div id="bar"></div></div>
+    </div>
+
+    <div class="toolbar hidden" id="sumBar">
+      <span class="sub">汇总方式</span>
+      <div class="seg" id="sumSeg"><button data-by="group" class="on">按分组</button><button data-by="level">按难度</button></div>
+    </div>
+    <div id="summary" class="cards" style="margin-bottom:14px"></div>
+
+    <div class="panel">
+      <div class="toolbar">
+        <div class="seg" id="filterSeg">
+          <button data-f="all" class="on">全部</button>
+          <button data-f="fail">失败</button>
+          <button data-f="miss">未命中</button>
+        </div>
+        <span class="sub" id="runLabel"></span>
+        <span class="spacer"></span>
+        <button class="btn" id="csvBtn" disabled>导出 CSV</button>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead id="thead"></thead>
+          <tbody id="tbody"><tr><td class="empty" colspan="9">选好测试集点「开始测试」，或去「历史对比」载入之前的结果</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 单次调试 -->
+  <section id="tab-debug" class="hidden">
+    <div class="panel">
+      <h3 style="margin:0 0 10px;font-size:14px">Search</h3>
+      <div class="row">
+        <label class="f" style="flex:1;min-width:220px">query（支持 site: lang: after: 等语法）
+          <input id="dQuery" placeholder="例如：Claude Code release notes site:anthropic.com">
+        </label>
+        <label class="f">count <input id="dCount" type="number" min="1" max="50" value="10"></label>
+        <label class="f">localization IP <input id="dLoc" placeholder="可选，如 8.8.8.8" style="width:130px"></label>
+        <label class="f" style="flex-direction:row;align-items:center;gap:6px;padding-bottom:6px">
+          <input id="dNeed" type="checkbox"> need_content
+        </label>
+        <button class="btn primary" id="dSearchBtn">搜索</button>
+      </div>
+      <div id="dSearchOut"></div>
+    </div>
+    <div class="panel">
+      <h3 style="margin:0 0 10px;font-size:14px">Fetch</h3>
+      <div class="row">
+        <label class="f" style="flex:1;min-width:220px">url
+          <input id="dUrl" placeholder="https://...">
+        </label>
+        <button class="btn primary" id="dFetchBtn">抓取</button>
+      </div>
+      <div id="dFetchOut"></div>
+    </div>
+  </section>
+
+  <!-- 历史 -->
+  <section id="tab-history" class="hidden">
+    <div class="panel">
+      <div class="scroll"><table>
+        <thead><tr><th>时间</th><th>测试集</th><th>各组结果</th><th class="num">P50 耗时</th><th></th></tr></thead>
+        <tbody id="histBody"></tbody>
+      </table></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const FETCH_MIN_CHARS = 300;
+const CN_DOMAINS = ['baidu.com','zhihu.com','csdn.net','sohu.com','163.com','qq.com','sina.com','bilibili.com','douban.com',
+  'weibo.com','toutiao.com','ifeng.com','36kr.com','jianshu.com','people.com','xinhuanet.com','news.cn','cctv.com',
+  'chinadaily.com','cgtn.com','thepaper.cn','guancha.cn','huxiu.com','bjnews.com','xiaohongshu.com','douyin.com',
+  'aliyun.com','tencent.com','juejin.cn','oschina.net','cnblogs.com','sspai.com','ithome.com','eastmoney.com','gov.cn','china.com'];
+// 内容农场 / 第三方下载站的兜底名单；有 domains.json 时以它为准。带 / 的按「域名+路径前缀」匹配
+const FARMS = ['360doc.com','baijiahao.baidu.com','mbd.baidu.com','zhidao.baidu.com','wenku.baidu.com','jingyan.baidu.com',
+  'docin.com','doc88.com','book118.com','sohu.com/a/','163.com/dy/','kuaibao.qq.com','toutiao.com','pianshen.com',
+  'pc6.com','onlinedown.net','downza.cn','xiazaiba.com','crsky.com','duote.com','cr173.com','zol.com.cn','pconline.com.cn',
+  'softonic.com','uptodown.com','filehorse.com','softpedia.com','malavida.com','informer.com','download.cnet.com',
+  'filehippo.com','techspot.com/downloads','majorgeeks.com','updatestar.com','ehow.com'];
+// 抓回来的短页面里出现这些词，基本是登录墙、验证页或风控页
+const WALL_RE = /登录|登陆|注册|扫码|安全验证|验证码|环境异常|访问异常|请在微信客户端打开|sign in|log in|login|captcha|verify you are human|are you a robot|enable javascript/i;
+const WALL_MAX_CHARS = 1500;
+const LEVELS = ['L1', 'L2', 'L3', 'L4'];
+const LEVEL_NAME = { L1: 'L1 基础', L2: 'L2 进阶', L3: 'L3 困难', L4: 'L4 极难' };
+const TYPE_LABEL = { search: '搜索', fetch: '抓取', probe: '搜索→抓取' };
+
+let sets = [], current = null, stopFlag = false, filter = 'all', openRow = null, sumBy = 'group';
+
+const host = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+const onDomain = (h, d) => h === d || h.endsWith('.' + d);
+const isCN = h => h.endsWith('.cn') || CN_DOMAINS.some(d => onDomain(h, d));
+const matchPat = (u, f) => {
+  let p = ''; try { p = new URL(u).pathname; } catch {}
+  const [d, ...rest] = f.split('/');
+  return onDomain(host(u), d) && (!rest.length || p.startsWith('/' + rest.join('/')));
+};
+// 启动时用 domains.json 里「第三方下载站/山寨站」「垃圾/灰产」两类替换内置名单，和 analyze.py 口径一致
+const isFarm = u => FARMS.some(f => matchPat(u, f));
+const unescapeMd = s => (s || '').replace(/\\([\\`*_{}\[\]()#+\-.!|<>~:\/,&%=?;'"@$^])/g, '$1');
+const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+const pc = x => x == null ? '–' : Math.round(x * 100) + '%';
+const quant = (arr, q) => { if (!arr.length) return null; const s = [...arr].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
+const fmtMs = ms => ms == null ? '–' : ms >= 1000 ? (ms / 1000).toFixed(1) + 's' : ms + 'ms';
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) } : {});
+  return r.json();
+}
+
+// ---------- 判定 ----------
+function judgeSearch(item, resp) {
+  const results = resp.body?.results || [];
+  const ok = resp.status === 200;
+  // 每种判定各找第一个满足的位置；同时给了多种判定时要全部满足，排名取最靠后的那个
+  const checks = [];
+  if (item.expect?.length) checks.push(r => item.expect.some(k => `${r.title} ${r.snippet} ${r.summary}`.toLowerCase().includes(k.toLowerCase())));
+  if (item.expect_domain?.length) checks.push(r => item.expect_domain.some(d => onDomain(host(r.url), d)));
+  if (item.expect_after) checks.push(r => r.date && r.date.slice(0, 10) >= item.expect_after);
+  const ranks = checks.map(c => results.findIndex(c));
+  const hit = checks.length ? ranks.every(x => x >= 0) : null;
+  const hosts = results.map(r => host(r.url));
+  return {
+    ok, n: results.length, hit, hitRank: hit ? Math.max(...ranks) + 1 : null,
+    overseas: hosts.length ? hosts.filter(h => !isCN(h)).length / hosts.length : null,
+    farm: results.length ? results.filter(r => isFarm(r.url)).length / results.length : null,
+    auth: avg(results.map(r => r.authority).filter(a => a != null && a >= 0)),
+    top: results[0] ? `${results[0].site_name || host(results[0].url)} · ${results[0].title}` : '',
+    err: ok ? '' : (resp.body?.error?.message || `HTTP ${resp.status}`),
+  };
+}
+
+function judgeFetch(resp) {
+  const content = resp.body?.content || '';
+  const len = resp.body?.content_length ?? content.length;  // 公开版结果截断了正文，只保留原长度
+  const wall = resp.status === 200 && len < WALL_MAX_CHARS && WALL_RE.test(content + ' ' + (resp.body?.title || ''));
+  const thin = resp.status === 200 && !wall && len < FETCH_MIN_CHARS;
+  const ok = resp.status === 200 && !wall && !thin;
+  return {
+    ok, len, wall, thin, title: resp.body?.title || '',
+    err: ok ? '' : wall ? `疑似登录墙/验证页（${len} 字符）` : thin ? `正文过短（${len} 字符）` : (resp.body?.error?.message || `HTTP ${resp.status}`),
+  };
+}
+
+function judgeProbe(item, r) {
+  const s = judgeSearch(item, r.resp);
+  const results = r.resp.body?.results || [];
+  const plat = results.filter(x => (item.expect_domain || []).some(d => onDomain(host(x.url), d)));
+  const fs = r.fetches || [];
+  return {
+    ...s, platN: plat.length,
+    fN: fs.length, fOk: fs.filter(f => f.j.ok).length, fWall: fs.filter(f => f.j.wall).length,
+    fErr: fs.filter(f => !f.j.ok && !f.j.wall).length,
+  };
+}
+
+function summarize(run, by = 'group') {
+  const groups = {};
+  for (const r of run.rows) {
+    if (!r.resp) continue;
+    const key = by === 'level' ? r.item.level : (r.item.group || '默认');
+    if (!key) continue;  // 按难度汇总时跳过没标难度的题（如 SEO 重灾区）
+    const g = groups[key] ||= { n: 0, ok: 0, hit: 0, hitN: 0, ms: [], overseas: [], farm: [], auth: [], len: [], plat: [], fN: 0, fOk: 0, fWall: 0 };
+    g.n++; if (r.j.ok) g.ok++;
+    g.ms.push(r.resp.ms);
+    if (run.type === 'fetch') { if (r.j.ok) g.len.push(r.j.len); if (r.j.wall) g.fWall++; continue; }
+    if (r.j.hit !== null && r.j.ok) { g.hitN++; if (r.j.hit) g.hit++; }
+    for (const f of ['overseas', 'farm', 'auth']) if (r.j[f] != null) g[f].push(r.j[f]);
+    if (run.type === 'probe') { g.plat.push(r.j.platN); g.fN += r.j.fN; g.fOk += r.j.fOk; g.fWall += r.j.fWall; }
+  }
+  const keys = by === 'level' ? LEVELS.filter(l => groups[l]) : Object.keys(groups);
+  const out = {};
+  for (const k of keys) {
+    const g = groups[k];
+    const m = out[k] = { n: g.n, okRate: g.ok / g.n, p50: quant(g.ms, .5), p95: quant(g.ms, .95) };
+    if (run.type === 'fetch') { m.medLen = quant(g.len, .5); m.wallRate = g.fWall / g.n; continue; }
+    m.hitRate = g.hitN ? g.hit / g.hitN : null;
+    m.overseas = avg(g.overseas); m.farm = avg(g.farm); m.auth = avg(g.auth);
+    if (run.type === 'probe') {
+      m.platAvg = avg(g.plat); m.fN = g.fN;
+      m.fOkRate = g.fN ? g.fOk / g.fN : null; m.fWallRate = g.fN ? g.fWall / g.fN : null;
+    }
+  }
+  return out;
+}
+
+// ---------- 汇总卡片 ----------
+const metric = (v, label) => `<div class="metric"><b>${v}</b><span>${label}</span></div>`;
+function cardMetrics(m) {
+  const t = current.type;
+  if (t === 'fetch') return [
+    metric(pc(m.okRate), '抓取成功率'), metric(pc(m.wallRate), '登录墙/验证页'),
+    metric(m.medLen == null ? '–' : m.medLen.toLocaleString(), '正文中位长度'), metric(fmtMs(m.p50), `P50 · P95 ${fmtMs(m.p95)}`)];
+  if (t === 'probe') return [
+    metric(pc(m.hitRate), '搜索命中（平台收录）'), metric(m.platAvg == null ? '–' : m.platAvg.toFixed(1), '每次搜到的平台链接'),
+    metric(m.fN ? pc(m.fOkRate) : '–', `抓取成功（${m.fN} 次）`), metric(m.fN ? pc(m.fWallRate) : '–', '登录墙/验证页')];
+  return [
+    metric(m.hitRate == null ? '–' : pc(m.hitRate), m.hitRate == null ? '无标准答案' : '答案命中率'),
+    metric(m.auth == null ? '–' : m.auth.toFixed(2), '平均权威度（0–4）'),
+    metric(pc(m.farm), '下载站/垃圾站占比'), metric(pc(m.overseas), '海外来源占比'),
+    metric(fmtMs(m.p50), `P50 · P95 ${fmtMs(m.p95)}`), metric(pc(m.okRate), '请求成功率')];
+}
+function renderSummary() {
+  const box = $('#summary');
+  $('#sumBar').classList.toggle('hidden', !current || current.type === 'fetch' || !current.rows.some(r => r.item.level));
+  if (!current) { box.innerHTML = ''; return; }
+  const by = current.type === 'fetch' ? 'group' : sumBy;
+  const s = summarize(current, by);
+  box.innerHTML = Object.entries(s).map(([g, m]) => `
+    <div class="panel card" style="margin:0">
+      <h3>${esc(by === 'level' ? LEVEL_NAME[g] : g)} <span class="sub">· ${m.n} 条</span></h3>
+      <div class="metrics">${cardMetrics(m).join('')}</div>
+    </div>`).join('');
+}
+
+// ---------- 结果表 ----------
+function renderHead() {
+  const t = current?.type;
+  const cols = t === 'fetch' ? ['#', '组', 'URL', '结果', '耗时', '正文长度', '标题 / 错误']
+    : t === 'probe' ? ['#', '组', '难度', '查询', '搜索', '平台链接', '抓取', '首条结果 / 错误']
+    : ['#', '组', '难度', '查询', '结果', '耗时', '权威度', '首条结果 / 错误'];
+  $('#thead').innerHTML = '<tr>' + cols.map(c => `<th${['耗时', '正文长度', '权威度', '平台链接', '#'].includes(c) ? ' class="num"' : ''}>${c}</th>`).join('') + '</tr>';
+}
+
+function fetchTag(j, status) {
+  return j.ok ? '<span class="tag ok">成功</span>' : j.wall ? '<span class="tag warn">登录墙</span>'
+    : j.thin ? '<span class="tag warn">内容过短</span>' : `<span class="tag bad">${status || '网络错误'}</span>`;
+}
+function searchTag(r) {
+  if (!r.j.ok) return `<span class="tag bad">${r.resp.status || '网络错误'}</span>`;
+  if (r.j.hit === null) return `<span class="tag mute">${r.j.n} 条</span>`;
+  return r.j.hit ? `<span class="tag ok">命中 #${r.j.hitRank}</span>` : '<span class="tag warn">未命中</span>';
+}
+function probeFetchTag(j) {
+  if (!j.fN) return '<span class="tag mute">无可抓链接</span>';
+  const cls = j.fOk === j.fN ? 'ok' : j.fOk ? 'warn' : 'bad';
+  return `<span class="tag ${cls}">${j.fOk}/${j.fN} 成功</span>${j.fWall ? ` <span class="tag warn">墙 ${j.fWall}</span>` : ''}`;
+}
+
+function visible(r) {
+  if (filter === 'all') return true;
+  if (!r.resp) return false;
+  if (filter === 'fail') return !r.j.ok || (current.type === 'probe' && r.j.fN > r.j.fOk);
+  return current.type !== 'fetch' && r.j.ok && r.j.hit === false;
+}
+
+function renderRows() {
+  renderHead();
+  const tb = $('#tbody');
+  if (!current) return;
+  const t = current.type, html = [];
+  current.rows.forEach((r, i) => {
+    if (!visible(r)) return;
+    const main = t === 'fetch' ? r.item.url : r.item.query;
+    const errOr = v => r.j.err ? `<span style="color:var(--bad)">${esc(r.j.err)}</span>` : esc(v);
+    const retry = r.resp?.retries ? ` <span class="sub">重试${r.resp.retries}</span>` : '';
+    let cells;
+    if (!r.resp) cells = t === 'fetch' ? ['<span class="tag mute">等待</span>', '', '', '']
+      : t === 'probe' ? [r.item.level || '', '<span class="tag mute">等待</span>', '', '', '']
+      : [r.item.level || '', '<span class="tag mute">等待</span>', '', '', ''];
+    else if (t === 'fetch') cells = [fetchTag(r.j, r.resp.status) + retry, fmtMs(r.resp.ms), r.j.len.toLocaleString(), errOr(r.j.title)];
+    else if (t === 'probe') cells = [r.item.level || '', searchTag(r) + retry, r.j.platN, r.fetches ? probeFetchTag(r.j) : '<span class="tag mute">抓取中…</span>', errOr(r.j.top)];
+    else cells = [r.item.level || '', searchTag(r) + retry, fmtMs(r.resp.ms), r.j.auth == null ? '–' : r.j.auth.toFixed(1), errOr(r.j.top)];
+    const numIdx = t === 'fetch' ? [1, 2] : t === 'probe' ? [2] : [2, 3];
+    const tds = cells.map((c, k) => `<td class="${numIdx.includes(k) ? 'num' : k === cells.length - 1 ? 'trunc' : ''}">${c}</td>`);
+    if (t === 'fetch') tds.unshift(`<td class="trunc" title="${esc(main)}">${esc(main)}</td>`);
+    else tds.splice(1, 0, `<td class="trunc" title="${esc(main)}">${esc(main)}</td>`);
+    html.push(`<tr class="item" data-i="${i}"><td class="num">${i + 1}</td><td>${esc(r.item.group || '')}</td>${tds.join('')}</tr>`);
+    if (openRow === i && r.resp) html.push(`<tr class="detail"><td colspan="9">${detailHtml(r)}</td></tr>`);
+  });
+  tb.innerHTML = html.join('') || '<tr><td class="empty" colspan="9">没有符合筛选的条目</td></tr>';
+}
+
+// ---------- 详情 ----------
+function highlight(text, keys) {
+  let h = esc(text);
+  for (const k of keys || []) if (k) h = h.replace(new RegExp(esc(k).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark>${m}</mark>`);
+  return h;
+}
+function searchResultsHtml(results, item = {}) {
+  if (!results.length) return '<div class="sub">无结果</div>';
+  return results.map((x, k) => {
+    const h = host(x.url);
+    const tags = [isCN(h) ? '国内' : '海外'];
+    const official = (item.expect_domain || []).some(d => onDomain(h, d));
+    return `<div class="res">
+    <a href="${esc(x.url)}" target="_blank" rel="noopener">${k + 1}. ${highlight(x.title, item.expect)}</a>
+    <div class="meta">${esc(x.site_name || '')} · ${esc(h)} <span class="tag mute">${tags[0]}</span>
+      ${official ? '<span class="tag ok">目标域名</span>' : ''}${isFarm(x.url) ? '<span class="tag warn">下载站/垃圾站</span>' : ''}
+      · 权威度 ${x.authority ?? '–'} · 相关度 ${x.rerank_score?.toFixed?.(2) ?? '–'}${x.date ? ' · ' + esc(x.date.slice(0, 10)) : ''}</div>
+    <p>${highlight((x.snippet || x.summary || '').slice(0, 300), item.expect)}</p></div>`;
+  }).join('');
+}
+function fetchHtml(body) {
+  const content = unescapeMd(body.content || '');
+  return `<div class="sub">${esc(body.title || '（无标题）')} · ${content.length.toLocaleString()} 字符</div><pre>${esc(content.slice(0, 4000))}${content.length > 4000 ? '\n\n…（仅显示前 4000 字符）' : ''}</pre>`;
+}
+function expectLine(item) {
+  const parts = [];
+  if (item.expect?.length) parts.push('关键词：' + item.expect.join('、'));
+  if (item.expect_domain?.length) parts.push('目标域名：' + item.expect_domain.join('、'));
+  if (item.expect_after) parts.push('需有不早于 ' + item.expect_after + ' 的结果');
+  return parts.length ? `<div class="sub">${esc(parts.join(' ｜ '))}</div>` : '';
+}
+function detailHtml(r) {
+  const body = r.resp.body || {};
+  const raw = `<details><summary>原始 JSON</summary><pre>${esc(JSON.stringify(body, null, 1).slice(0, 20000))}</pre></details>`;
+  if (current.type === 'fetch') return (r.resp.status === 200 ? fetchHtml(body) : `<div style="color:var(--bad)">${esc(r.j.err)}</div>`) + raw;
+  const search = r.resp.status === 200 ? searchResultsHtml(body.results || [], r.item) : `<div style="color:var(--bad)">${esc(r.j.err)}</div>`;
+  let fetches = '';
+  if (current.type === 'probe' && r.fetches?.length) fetches = `<h4 style="margin:12px 0 4px;font-size:13px">抓取平台链接</h4>` +
+    r.fetches.map(f => `<details><summary>${fetchTag(f.j, f.status)} ${fmtMs(f.ms)} · ${f.j.len.toLocaleString()} 字符 · ${esc(f.url)}</summary>
+      ${f.status === 200 ? fetchHtml(f.body) : `<div style="color:var(--bad)">${esc(f.j.err)}</div>`}</details>`).join('');
+  return expectLine(r.item) + fetches + `<h4 style="margin:12px 0 4px;font-size:13px">搜索结果</h4>` + search + raw;
+}
+
+function render() {
+  renderSummary(); renderRows();
+  if (current) {
+    const done = current.rows.filter(r => r.resp && (current.type !== 'probe' || r.fetches)).length;
+    $('#bar').style.width = (done / current.rows.length * 100) + '%';
+    $('#runLabel').textContent = `${current.set_name} · ${new Date(current.started).toLocaleString()} · ${done}/${current.rows.length}`;
+    $('#csvBtn').disabled = !done;
+  }
+}
+
+// ---------- 测试集 ----------
+function parseCustom() {
+  const type = $('#customType').value;
+  const items = $('#customText').value.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+    const p = l.split('|').map(s => s.trim());
+    const [group, main, keys] = p.length === 1 ? ['自定义', p[0], ''] : p.length === 2 ? [p[0], p[1], ''] : p;
+    const it = { group: group || '自定义' };
+    if (type === 'fetch') it.url = main;
+    else {
+      it.query = main;
+      const ks = (keys || '').split(/[,，]/).map(s => s.trim()).filter(Boolean);
+      // 关键词里像域名的（含点、无空格）当目标域名，其余当答案关键词
+      it.expect = ks.filter(k => !/^[\w-]+(\.[\w-]+)+$/.test(k));
+      it.expect_domain = ks.filter(k => /^[\w-]+(\.[\w-]+)+$/.test(k));
+    }
+    return it;
+  });
+  return { id: 'custom', name: '自定义', type, items, fetch_top: 3 };
+}
+const selectedSet = () => $('#setSel').value === 'custom' ? parseCustom() : sets.find(s => s.id === $('#setSel').value);
+
+function onSetChange() {
+  const custom = $('#setSel').value === 'custom';
+  $('#customBox').classList.toggle('hidden', !custom);
+  const s = selectedSet();
+  $('#setDesc').textContent = custom ? '自定义列表不会保存到 sets/，跑完的结果会进历史。第三段里像域名的（如 python.org）会当作目标域名。' : (s?.desc || '');
+  $('#countWrap').classList.toggle('hidden', s?.type === 'fetch');
+  const reqs = s ? s.items.length * (s.type === 'probe' ? 1 + (s.fetch_top || 3) : 1) : 0;
+  $('#costHint').textContent = s ? `${s.items.length} 条${s.type === 'probe' ? `（最多 ${reqs} 次请求）` : ''} · 最多约 $${(reqs * 0.00075).toFixed(3)}` : '';
+}
+
+// ---------- 运行 ----------
+async function runOne(s, r, count) {
+  if (s.type === 'fetch') {
+    r.resp = await api('/api/fetch', { url: r.item.url });
+    r.j = judgeFetch(r.resp);
+    return;
+  }
+  r.resp = await api('/api/search', { query: r.item.query, count });
+  r.j = judgeSearch(r.item, r.resp);
+  if (s.type !== 'probe') return;
+  render();
+  // 探测：取搜到的目标平台链接（去重）逐个抓
+  const seen = new Set();
+  const urls = (r.resp.body?.results || []).map(x => x.url.split('#')[0])
+    .filter(u => (r.item.expect_domain || []).some(d => onDomain(host(u), d)) && !seen.has(u) && seen.add(u))
+    .slice(0, s.fetch_top || 3);
+  const fetches = [];
+  for (const url of urls) {
+    if (stopFlag) break;
+    const fr = await api('/api/fetch', { url });
+    fetches.push({ url, status: fr.status, ms: fr.ms, body: fr.body, j: judgeFetch(fr) });
+  }
+  r.fetches = fetches;
+  r.j = judgeProbe(r.item, r);
+}
+
+async function runBatch() {
+  const s = selectedSet();
+  if (!s || !s.items.length) return alert('测试集为空');
+  const conc = Math.max(1, Math.min(5, +$('#conc').value || 3));
+  const count = Math.max(1, Math.min(50, +$('#count').value || 10));
+  const started = new Date();
+  const pad = n => String(n).padStart(2, '0');
+  current = {
+    id: `${started.getFullYear()}${pad(started.getMonth() + 1)}${pad(started.getDate())}-${pad(started.getHours())}${pad(started.getMinutes())}${pad(started.getSeconds())}-${s.id}`,
+    set_name: s.name, type: s.type, started: started.toISOString(),
+    options: { conc, count: s.type === 'fetch' ? undefined : count, fetch_top: s.type === 'probe' ? (s.fetch_top || 3) : undefined },
+    rows: s.items.map(item => ({ item, resp: null, j: null })),
+  };
+  stopFlag = false; openRow = null;
+  $('#runBtn').disabled = true; $('#stopBtn').disabled = false;
+  render();
+  let next = 0, lastPaint = 0;
+  const worker = async () => {
+    while (!stopFlag && next < current.rows.length) {
+      await runOne(s, current.rows[next++], count);
+      if (Date.now() - lastPaint > 150) { lastPaint = Date.now(); render(); }
+    }
+  };
+  await Promise.all(Array.from({ length: conc }, worker));
+  render();
+  $('#runBtn').disabled = false; $('#stopBtn').disabled = true;
+  current.summary = summarize(current, 'group');
+  current.summary_level = summarize(current, 'level');
+  current.stopped = stopFlag;
+  await api('/api/runs', current);
+  loadHistory();
+}
+
+// ---------- CSV ----------
+function exportCsv() {
+  const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const rows = current.rows.filter(r => r.resp);
+  const n2 = x => x == null ? '' : x.toFixed(2);
+  const lines = current.type === 'fetch'
+    ? [['组', 'URL', 'HTTP', '成功', '登录墙', '耗时ms', '正文长度', '标题', '错误']].concat(rows.map(r =>
+        [r.item.group, r.item.url, r.resp.status, r.j.ok, r.j.wall, r.resp.ms, r.j.len, r.j.title, r.j.err]))
+    : [['组', '难度', '查询', '期望', 'HTTP', '命中', '命中排名', '平均权威度', '下载站垃圾站占比', '海外占比', '耗时ms',
+        ...(current.type === 'probe' ? ['平台链接数', '抓取次数', '抓取成功', '登录墙'] : []), '首条', '错误']].concat(rows.map(r =>
+        [r.item.group, r.item.level, r.item.query,
+         [...(r.item.expect || []), ...(r.item.expect_domain || []), r.item.expect_after || ''].filter(Boolean).join('/'),
+         r.resp.status, r.j.hit, r.j.hitRank, n2(r.j.auth), n2(r.j.farm), n2(r.j.overseas), r.resp.ms,
+         ...(current.type === 'probe' ? [r.j.platN, r.j.fN, r.j.fOk, r.j.fWall] : []), r.j.top, r.j.err]));
+  const blob = new Blob(['﻿' + lines.map(l => l.map(q).join(',')).join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = `${current.id}.csv`; a.click();
+}
+
+// ---------- 历史 ----------
+function histLine(type, g, m) {
+  const bits = type === 'fetch' ? [`成功 ${pc(m.okRate)}`, `墙 ${pc(m.wallRate)}`]
+    : type === 'probe' ? [`收录 ${pc(m.hitRate)}`, `抓取 ${m.fN ? pc(m.fOkRate) : '–'}`, `墙 ${m.fN ? pc(m.fWallRate) : '–'}`]
+    : [m.hitRate == null ? '无标准答案' : `命中 ${pc(m.hitRate)}`, `权威 ${m.auth == null ? '–' : m.auth.toFixed(1)}`, `垃圾 ${pc(m.farm)}`];
+  return `<div><b>${esc(LEVEL_NAME[g] || g)}</b> <span class="sub">(${m.n})</span> ${bits.join(' · ')}</div>`;
+}
+async function loadHistory() {
+  const runs = await api('/api/runs');
+  $('#histBody').innerHTML = runs.length ? runs.map(r => {
+    const s = r.summary || {};
+    const groups = Object.entries(s).map(([g, m]) => histLine(r.type, g, m)).join('');
+    const p50 = fmtMs(quant(Object.values(s).map(m => m.p50).filter(x => x != null), .5));
+    return `<tr><td style="white-space:nowrap">${esc(new Date(r.started).toLocaleString())}</td>
+      <td>${esc(r.set_name)}<div class="sub">${TYPE_LABEL[r.type] || ''}</div></td>
+      <td>${groups}</td><td class="num">${p50}</td>
+      <td style="white-space:nowrap"><button class="btn" data-load="${esc(r.id)}">查看</button> <button class="btn" data-del="${esc(r.id)}">删除</button></td></tr>`;
+  }).join('') : '<tr><td class="empty" colspan="5">还没有测试记录</td></tr>';
+}
+
+// ---------- 单次调试 ----------
+async function debugSearch() {
+  const query = $('#dQuery').value.trim(); if (!query) return;
+  const body = { query, count: +$('#dCount').value || 10 };
+  if ($('#dNeed').checked) body.need_content = true;
+  if ($('#dLoc').value.trim()) body.localization = $('#dLoc').value.trim();
+  $('#dSearchOut').innerHTML = '<div class="sub" style="margin-top:10px">搜索中…</div>';
+  const r = await api('/api/search', body);
+  const results = r.body?.results || [];
+  $('#dSearchOut').innerHTML = `<div class="sub" style="margin-top:10px">HTTP ${r.status} · ${fmtMs(r.ms)} · ${results.length} 条 · 海外来源 ${results.length ? pc(results.filter(x => !isCN(host(x.url))).length / results.length) : '–'} · 下载站/垃圾站 ${results.length ? pc(results.filter(x => isFarm(x.url)).length / results.length) : '–'}</div>
+    ${r.status === 200 ? searchResultsHtml(results) : `<div style="color:var(--bad)">${esc(r.body?.error?.message)}</div>`}
+    <details><summary>原始 JSON</summary><pre>${esc(JSON.stringify(r.body, null, 1))}</pre></details>`;
+}
+async function debugFetch() {
+  const url = $('#dUrl').value.trim(); if (!url) return;
+  $('#dFetchOut').innerHTML = '<div class="sub" style="margin-top:10px">抓取中…</div>';
+  const r = await api('/api/fetch', { url });
+  const j = judgeFetch(r);
+  $('#dFetchOut').innerHTML = `<div class="sub" style="margin-top:10px">${fetchTag(j, r.status)} HTTP ${r.status} · ${fmtMs(r.ms)}</div>
+    ${r.status === 200 ? fetchHtml(r.body) : `<div style="color:var(--bad)">${esc(r.body?.error?.message)}</div>`}
+    <details><summary>原始 JSON</summary><pre>${esc(JSON.stringify(r.body, null, 1).slice(0, 20000))}</pre></details>`;
+}
+
+// ---------- 事件 ----------
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
+  ['batch', 'debug', 'history'].forEach(t => $('#tab-' + t).classList.toggle('hidden', t !== b.dataset.tab));
+});
+const showTab = t => document.querySelector(`nav button[data-tab="${t}"]`).click();
+$('#setSel').onchange = onSetChange;
+$('#customText').oninput = onSetChange;
+$('#customType').onchange = onSetChange;
+$('#runBtn').onclick = runBatch;
+$('#stopBtn').onclick = () => { stopFlag = true; $('#stopBtn').disabled = true; };
+$('#csvBtn').onclick = exportCsv;
+const segBind = (sel, attr, fn) => $(sel).onclick = e => {
+  const v = e.target.dataset[attr]; if (!v) return;
+  $(sel).querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset[attr] === v)); fn(v);
+};
+segBind('#filterSeg', 'f', v => { filter = v; renderRows(); });
+segBind('#sumSeg', 'by', v => { sumBy = v; renderSummary(); });
+$('#tbody').onclick = e => {
+  if (e.target.closest('details, a')) return;
+  const tr = e.target.closest('tr.item'); if (!tr) return;
+  const i = +tr.dataset.i; openRow = openRow === i ? null : i; renderRows();
+};
+$('#histBody').onclick = async e => {
+  const id = e.target.dataset.load, del = e.target.dataset.del;
+  if (id) { await loadRun(id); showTab('batch'); }
+  if (del && confirm('删除这条记录？')) { await fetch('/api/runs/' + del, { method: 'DELETE' }); loadHistory(); }
+};
+// 命令行 bench.py 跑出的结果没有 j（判定），载入时补算
+async function loadRun(id) {
+  current = await api('/api/runs/' + id);
+  for (const r of current.rows) {
+    if (r.j || !r.resp) continue;
+    if (current.type === 'fetch') r.j = judgeFetch(r.resp);
+    else if (current.type === 'probe') { for (const f of r.fetches || []) f.j ||= judgeFetch(f); r.j = judgeProbe(r.item, r); }
+    else r.j = judgeSearch(r.item, r.resp);
+  }
+  openRow = null; render();
+}
+
+$('#dSearchBtn').onclick = debugSearch;
+$('#dFetchBtn').onclick = debugFetch;
+$('#dQuery').onkeydown = e => e.key === 'Enter' && debugSearch();
+$('#dUrl').onkeydown = e => e.key === 'Enter' && debugFetch();
+
+(async () => {
+  const st = await api('/api/status');
+  $('#keyPill').textContent = st.has_key ? 'API key 已加载' : '未找到 DEEPSEEK_API_KEY';
+  $('#keyPill').className = 'pill ' + (st.has_key ? 'ok' : 'bad');
+  try {
+    const dom = await api('/api/domains');
+    const bad = dom.categories.filter(c => ['第三方下载站/山寨站', '垃圾/灰产'].includes(c.name)).flatMap(c => c.domains);
+    if (bad.length) FARMS.splice(0, FARMS.length, ...bad);
+  } catch {}
+  sets = await api('/api/sets');
+  const order = { search: 0, probe: 1, fetch: 2 };
+  sets.sort((a, b) => order[a.type] - order[b.type] || b.items.length - a.items.length);
+  $('#setSel').innerHTML = sets.map(s => `<option value="${esc(s.id)}">${esc(s.name)}（${s.items.length}）</option>`).join('') + '<option value="custom">自定义…</option>';
+  onSetChange(); renderHead(); loadHistory();
+  // 链接参数：?run=<结果id>&by=level&open=<行号>&filter=fail&tab=history，方便分享和截图
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('tab')) showTab(qs.get('tab'));
+  if (qs.get('run')) {
+    if (qs.get('by')) document.querySelector(`#sumSeg button[data-by="${qs.get('by')}"]`)?.click();
+    if (qs.get('filter')) document.querySelector(`#filterSeg button[data-f="${qs.get('filter')}"]`)?.click();
+    await loadRun(qs.get('run'));
+    if (qs.get('open')) { openRow = +qs.get('open'); renderRows(); }
+  }
+})();
+</script>
+</body>
+</html>

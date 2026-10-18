@@ -1,0 +1,6 @@
+.env
+.venv/
+results_raw/
+__pycache__/
+.DS_Store
+.gstack/

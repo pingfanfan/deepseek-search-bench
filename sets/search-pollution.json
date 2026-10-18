@@ -1,0 +1,376 @@
+{
+ "name": "Search · 易污染问题信源分析（SEO / GEO）",
+ "type": "search",
+ "desc": "7 类易被 SEO / GEO 污染的问题，中英各半。下载类有官方域名可判对错；其余类没有标准答案，只做信源构成分析（官方/权威、百科、媒体、社区、测评、厂商自荐、内容农场）。",
+ "items": [
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "Telegram 中文版 电脑版 下载",
+   "expect_domain": [
+    "telegram.org"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "Chrome 浏览器 官方下载",
+   "expect_domain": [
+    "google.com",
+    "google.cn"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "WinRAR 下载",
+   "expect_domain": [
+    "win-rar.com",
+    "rarlab.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "微信电脑版下载",
+   "expect_domain": [
+    "weixin.qq.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "Steam 客户端 下载",
+   "expect_domain": [
+    "steampowered.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "Zoom 会议 下载",
+   "expect_domain": [
+    "zoom.us",
+    "zoom.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "VS Code 下载",
+   "expect_domain": [
+    "visualstudio.com",
+    "microsoft.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "zh",
+   "query": "KeePass 下载",
+   "expect_domain": [
+    "keepass.info"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "Notepad++ download",
+   "expect_domain": [
+    "notepad-plus-plus.org"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "WinRAR free download",
+   "expect_domain": [
+    "win-rar.com",
+    "rarlab.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "VLC download for Windows",
+   "expect_domain": [
+    "videolan.org"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "Audacity download",
+   "expect_domain": [
+    "audacityteam.org"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "Telegram desktop download",
+   "expect_domain": [
+    "telegram.org"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "Signal desktop download",
+   "expect_domain": [
+    "signal.org"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "OBS Studio download",
+   "expect_domain": [
+    "obsproject.com"
+   ]
+  },
+  {
+   "group": "软件下载",
+   "lang": "en",
+   "query": "ESTA application official website",
+   "expect_domain": [
+    "dhs.gov",
+    "cbp.gov"
+   ]
+  },
+  {
+   "group": "医疗健康",
+   "lang": "zh",
+   "query": "失眠吃什么药效果好"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "zh",
+   "query": "怎么快速减肥"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "zh",
+   "query": "白癜风 哪家医院 好"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "zh",
+   "query": "NMN 抗衰老 有用吗"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "zh",
+   "query": "脱发 怎么治疗 最有效"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "en",
+   "query": "best supplements for weight loss"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "en",
+   "query": "how to cure insomnia naturally"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "en",
+   "query": "does NMN reverse aging"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "en",
+   "query": "best treatment for hair loss"
+  },
+  {
+   "group": "医疗健康",
+   "lang": "en",
+   "query": "keto diet benefits"
+  },
+  {
+   "group": "金融理财",
+   "lang": "zh",
+   "query": "现在买什么基金好"
+  },
+  {
+   "group": "金融理财",
+   "lang": "zh",
+   "query": "比特币 值得投资吗"
+  },
+  {
+   "group": "金融理财",
+   "lang": "zh",
+   "query": "征信花了 哪里能贷款"
+  },
+  {
+   "group": "金融理财",
+   "lang": "zh",
+   "query": "副业赚钱方法"
+  },
+  {
+   "group": "金融理财",
+   "lang": "en",
+   "query": "is bitcoin a good investment"
+  },
+  {
+   "group": "金融理财",
+   "lang": "en",
+   "query": "how to make money online fast"
+  },
+  {
+   "group": "金融理财",
+   "lang": "en",
+   "query": "best credit cards 2026"
+  },
+  {
+   "group": "金融理财",
+   "lang": "en",
+   "query": "personal loan with bad credit"
+  },
+  {
+   "group": "产品测评",
+   "lang": "zh",
+   "query": "空气炸锅推荐"
+  },
+  {
+   "group": "产品测评",
+   "lang": "zh",
+   "query": "扫地机器人 哪个牌子好"
+  },
+  {
+   "group": "产品测评",
+   "lang": "zh",
+   "query": "2026 性价比 手机 推荐"
+  },
+  {
+   "group": "产品测评",
+   "lang": "zh",
+   "query": "净水器 品牌 排行榜"
+  },
+  {
+   "group": "产品测评",
+   "lang": "en",
+   "query": "best air fryer"
+  },
+  {
+   "group": "产品测评",
+   "lang": "en",
+   "query": "best robot vacuum 2026"
+  },
+  {
+   "group": "产品测评",
+   "lang": "en",
+   "query": "best laptop for programming 2026"
+  },
+  {
+   "group": "产品测评",
+   "lang": "en",
+   "query": "best mattress"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "zh",
+   "query": "2026 最好用的 AI 写作工具"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "zh",
+   "query": "国内 GEO 优化 公司 排名"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "zh",
+   "query": "好用的 VPN 推荐 2026"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "zh",
+   "query": "CRM 系统 哪家好"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "zh",
+   "query": "留学中介 排名 前十"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "en",
+   "query": "best AI writing tools 2026"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "en",
+   "query": "best VPN 2026"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "en",
+   "query": "best CRM software for small business"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "en",
+   "query": "top SEO agencies"
+  },
+  {
+   "group": "GEO 排行榜",
+   "lang": "en",
+   "query": "best web hosting 2026"
+  },
+  {
+   "group": "本地服务",
+   "lang": "zh",
+   "query": "北京 搬家公司 哪家好"
+  },
+  {
+   "group": "本地服务",
+   "lang": "zh",
+   "query": "上海 装修公司 推荐"
+  },
+  {
+   "group": "本地服务",
+   "lang": "zh",
+   "query": "雅思 培训 哪家好"
+  },
+  {
+   "group": "本地服务",
+   "lang": "en",
+   "query": "best plumber near me London"
+  },
+  {
+   "group": "本地服务",
+   "lang": "en",
+   "query": "best IELTS preparation course"
+  },
+  {
+   "group": "盗版灰产",
+   "lang": "zh",
+   "query": "Office 2021 永久激活 破解版 下载"
+  },
+  {
+   "group": "盗版灰产",
+   "lang": "zh",
+   "query": "最新电影 免费 在线观看"
+  },
+  {
+   "group": "盗版灰产",
+   "lang": "zh",
+   "query": "网课 代刷 平台"
+  },
+  {
+   "group": "盗版灰产",
+   "lang": "en",
+   "query": "Photoshop crack free download"
+  },
+  {
+   "group": "盗版灰产",
+   "lang": "en",
+   "query": "watch movies free online"
+  },
+  {
+   "group": "盗版灰产",
+   "lang": "en",
+   "query": "buy Instagram followers cheap"
+  }
+ ]
+}

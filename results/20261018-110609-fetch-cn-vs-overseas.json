@@ -1,0 +1,896 @@
+{
+ "id": "20261018-110609-fetch-cn-vs-overseas",
+ "set_name": "Fetch · 国内 vs 海外站点",
+ "type": "fetch",
+ "started": "2026-10-18T10:06:09.378Z",
+ "options": {
+  "conc": 3
+ },
+ "rows": [
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.gov.cn/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 4584,
+    "retries": 0,
+    "body": {
+     "content": "施政为民激发活力政府建设\n\n施政为民\n\n激发活力\n\n政府建设\n\n主办单位：国务院办公厅 运行维护单位：中国政府网运行中心\n\n版权所有：中国政府网 中文域名：中国政府网\\.政务\n\n主办单位：国务院办公厅 运行维护单位：中国政府网运行中心\n\n版权所有：中国政府网 中文域名：中国政府网\\.政务",
+     "title": "中国政府网_中央人民政府门户网站",
+     "content_length": 144
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 144,
+    "title": "中国政府网_中央人民政府门户网站",
+    "thin": true,
+    "err": "正文过短（144 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.news.cn/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 13645,
+    "retries": 0,
+    "body": {
+     "content": "媒体矩阵\n\n新华网客户端手机新华网新华网微信公众号新华网官方微博新华网强国号新华网抖音号新华网快手号新华网视频号新华网B站号新华网头条号新华网百家号新华网企鹅号\n\n新华社主办 版权所有：新华网股份有限公司 Copyright © 2000 \\- 2026 XINHUANET\\.com All Rights Reserved\\.\n\n本站所刊登的新华社及新华网各种新闻﹑信息和各种专题专栏资料，均为新华…[公开版已截断，原文 219 字符]",
+     "title": "“有高远目标，更有耐心有定力”——习近平总书记在内蒙古乌兰察布考察纪实",
+     "content_length": 219
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 219,
+    "title": "“有高远目标，更有耐心有定力”——习近平总书记在内蒙古乌兰察布考察纪实",
+    "thin": true,
+    "err": "正文过短（219 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.people.com.cn/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 13602,
+    "retries": 0,
+    "body": {
+     "content": "2026中国品牌论坛6月17日在河北雄安新区举行。中央和国家机关有关部委负责同志、地方政府主管部门代表、企业负责人和专家学者等参加论坛。本届论坛主题为“‘十五五’\\| 品牌引领 向新而行”。\n\n人民网是《人民日报》建设的大型网上信息交互平台，是人民日报社控股的传媒文化上市公司，是国际互联网上最大的综合性网络媒体之一。1997年1月1日，人民网正式上线。2006年7月1日，中共中央批准人民网承办的“…[公开版已截断，原文 253 字符]",
+     "title": "习近平结束对美国的国事访问回到北京",
+     "content_length": 253
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 253,
+    "title": "习近平结束对美国的国事访问回到北京",
+    "thin": true,
+    "err": "正文过短（253 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://baike.baidu.com/item/Python/407313"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 8754,
+    "retries": 0,
+    "body": {
+     "content": "计算机编程语言\n\n展开4个同名词条\n\n\\# Python\n\nPython 是一种高级、通用、解释型开源编程语言，由 Guido van Rossum 于 1991 年首次发布，现由 Python 软件基金会维护，可跨平台运行。 \\[18\\-19\\]\n\n主要功能：核心为通用编程：覆盖网站后端、数据分析、人工智能与自动化脚本；设计强调代码可读性，便于协作维护；内置标准库并依托第三方包生态，多平台复用代…[公开版已截断，原文 24036 字符]",
+     "title": "Python",
+     "content_length": 24036
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 24036,
+    "title": "Python",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.thepaper.cn/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 3989,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: 4f62c012-db9a-409a-9786-97e256d33256)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: 4f62c012-db9a-409a-9786-97e256d33256)"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.36kr.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 3940,
+    "retries": 0,
+    "body": {
+     "content": "36氪\\_让一部分人先看到未来",
+     "title": "36氪_让一部分人先看到未来",
+     "content_length": 15
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 15,
+    "title": "36氪_让一部分人先看到未来",
+    "thin": true,
+    "err": "正文过短（15 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://juejin.cn/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 7145,
+    "retries": 0,
+    "body": {
+     "content": "首页\n首页\n沸点\n课程\nAPP\nAI用量\n作品广场\n专家标注\n搜索历史\n清空\n创作者中心\n写文章\n发沸点\n写笔记\n写代码\n草稿箱\n创作灵感\n查看更多\n登录\n注册\n首次登录 \\/ 注册免费领取\n登录 \\/ 注册\n排行榜\n综合\n后端\n前端\nAndroid\niOS\n人工智能\n开发工具\n代码人生\n阅读\n综合\n后端\n排行榜\n前端\nAndroid\niOS\n人工智能\n开发工具\n代码人生\n阅读\n推荐\n最新\n关注\n…[公开版已截断，原文 3422 字符]",
+     "title": "搜索历史 清空",
+     "content_length": 3422
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 3424,
+    "title": "搜索历史 清空",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.sohu.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 6259,
+    "retries": 0,
+    "body": {
+     "content": "无障碍\n关怀版\n设为默认首页\n下载APP\n登录\n关闭皮肤\n搜狐首页\n搜狐号\n时间线\n新闻\n军事\n专题\n财经\n宏观\n理财\n体育\n英超\nNBA\n房产\n新房\n家居\n娱乐\n视频\n电视剧\n汽车\n买车\n新能源\n时尚\n旅游\n母婴\n科技\n教育\n健康\n美食\n文化\n历史\n星座\n动漫\n游戏\n邮箱\n24小时\n博客\n搜狐号\n热评榜\n彩票\n千帆\n大视野\n公益\n畅游\n17173\n政务\n网络监督专区欢迎监督如实举报\n学习强国\n伟…[公开版已截断，原文 5744 字符]",
+     "title": "刘德华与妻子罕见同框！60岁朱丽蒨长相年轻被误认...",
+     "content_length": 5744
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 5744,
+    "title": "刘德华与妻子罕见同框！60岁朱丽蒨长相年轻被误认...",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.bilibili.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 4186,
+    "retries": 0,
+    "body": {
+     "content": "该内容被AdGuard\\/AdBlock类插件屏蔽\n\n请检查插件以恢复正常内容展示\n\n该内容被AdGuard\\/AdBlock类插件屏蔽\n\n请检查插件以恢复正常内容展示\n\n该内容被AdGuard\\/AdBlock类插件屏蔽\n\n请检查插件以恢复正常内容展示\n\n该内容被AdGuard\\/AdBlock类插件屏蔽\n\n请检查插件以恢复正常内容展示\n\n该内容被AdGuard\\/AdBlock类插件屏蔽\n\n请…[公开版已截断，原文 661 字符]",
+     "title": "哔哩哔哩 (゜-゜)つロ 干杯~-bilibili",
+     "content_length": 661
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 661,
+    "title": "哔哩哔哩 (゜-゜)つロ 干杯~-bilibili",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.douban.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 5965,
+    "retries": 0,
+    "body": {
+     "content": "\\# 豆瓣\n\n豆瓣7\\.0\n\n下载豆瓣 App\n\niOS \\/ Android 扫码直接下载",
+     "title": "豆瓣",
+     "content_length": 46
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 46,
+    "title": "豆瓣",
+    "thin": true,
+    "err": "正文过短（46 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://www.zhihu.com/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 448,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: 489b299f-db2d-4f34-86b2-875af71e752a)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: 489b299f-db2d-4f34-86b2-875af71e752a)"
+   }
+  },
+  {
+   "item": {
+    "group": "国内",
+    "url": "https://weibo.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 12745,
+    "retries": 0,
+    "body": {
+     "content": "热门\n\n同城\n\n实时\n\nS16\n\n榜单\n\n明星\n\n搞笑\n\n3小时前\n\n来自 微博视频号\n已编辑\n【\\#法国抗议者称实在负担不起油费\\#】消防员、护士都上街了，\\#法国民众这次真急了\\#。法国巴黎抗议者：“今年夏天，我好几次在决定是否开车出行时，最终放弃了行程，因为实在负担不起油费。而且我还算是不依赖汽车的人，我住在巴黎，可以搭乘公共交通工具。但对于住在外省，出行依赖汽车的人来说，这实在 \\.\\.\\…[公开版已截断，原文 837 字符]",
+     "title": "微博 – 随时随地发现新鲜事",
+     "content_length": 837
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 837,
+    "title": "微博 – 随时随地发现新鲜事",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://en.wikipedia.org/wiki/Large_language_model"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 4133,
+    "retries": 0,
+    "body": {
+     "content": "\\# Large language model\n\nA large language model \\(LLM\\) is an AI model \\(typically a neural network\\) trained on a vast amount of text for natural language processing tasks\\, especially language gener…[公开版已截断，原文 95182 字符]",
+     "title": "Large language model - Wikipedia",
+     "content_length": 95182
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 95183,
+    "title": "Large language model - Wikipedia",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://github.com/torvalds/linux"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 11015,
+    "retries": 0,
+    "body": {
+     "content": "\\# GitHub \\- torvalds\\/linux\\: Linux kernel source tree · GitHub\n\nName\\| Name\\| Last commit message\\| Last commit date  \n\\-\\-\\-\\|\\-\\-\\-\\|\\-\\-\\-\\|\\-\\-\\-  \nDocumentation\\| Merge tag \\'spi\\-fix\\-v7\\.3\\-r…[公开版已截断，原文 4046 字符]",
+     "title": "GitHub - torvalds/linux: Linux kernel source tree · GitHub",
+     "content_length": 4046
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 4046,
+    "title": "GitHub - torvalds/linux: Linux kernel source tree · GitHub",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://arxiv.org/abs/1706.03762"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 406,
+    "retries": 0,
+    "body": {
+     "content": "Skip to main content\n\n\\# Computer Science \\> Computation and Language\n\narXiv\\:1706\\.03762 \\(cs\\)\n\n\\[Submitted on 12 Jun 2017 \\(v1\\)\\, last revised 2 Aug 2023 \\(this version\\, v7\\)\\]\n\n\\# Title\\:Attenti…[公开版已截断，原文 3297 字符]",
+     "title": "Attention Is All You Need",
+     "content_length": 3297
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 3297,
+    "title": "Attention Is All You Need",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://docs.python.org/3/tutorial/index.html"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 3450,
+    "retries": 0,
+    "body": {
+     "content": "\\# The Python Tutorial¶\n\nTip\n\nThis tutorial is designed for programmers that are new to the Python language\\, not beginners who are new to programming\\.\n\nPython is an easy to learn\\, powerful programm…[公开版已截断，原文 2366 字符]",
+     "title": "The Python Tutorial",
+     "content_length": 2366
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 2366,
+    "title": "The Python Tutorial",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 3477,
+    "retries": 0,
+    "body": {
+     "content": "\\# JavaScript\n\nJavaScript \\(JS\\) is a lightweight interpreted \\(or just\\-in\\-time compiled\\) programming language with first\\-class functions\\. While it is most well\\-known as the scripting language f…[公开版已截断，原文 5090 字符]",
+     "title": "JavaScript",
+     "content_length": 5090
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 5090,
+    "title": "JavaScript",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://www.bbc.com/news"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 402,
+    "retries": 0,
+    "body": {
+     "content": "\\#\\# After Dubois\\' dominant win\\, what\\'s next for heavyweight boxing\\?\n\nAfter world champion Daniel Dubois\\' emphatic win over Fabio Wardley\\, what\\'s next for the heavyweight division\\?",
+     "title": "BBC News - Breaking news, video and the latest top stories from the U.S. and around the world",
+     "content_length": 188
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 188,
+    "title": "BBC News - Breaking news, video and the latest top stories from the U.S. and around the world",
+    "thin": true,
+    "err": "正文过短（188 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://www.reuters.com/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 3421,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: 5dd8a488-8c6f-4ff9-ab65-eb05d4b72665)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: 5dd8a488-8c6f-4ff9-ab65-eb05d4b72665)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://www.theguardian.com/international"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 3811,
+    "retries": 0,
+    "body": {
+     "content": "\\#\\# News\n\n\\#\\#\\# UkraineIntensifying drone attacks on ships in Black Sea bring war ever closer to Nato shores\nSix attacks in 10 days by suspected Russian drones mark dramatic escalation in maritime c…[公开版已截断，原文 3473 字符]",
+     "title": "Latest news, sport and opinion from the Guardian",
+     "content_length": 3473
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 3473,
+    "title": "Latest news, sport and opinion from the Guardian",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://news.ycombinator.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 3489,
+    "retries": 0,
+    "body": {
+     "content": "\\| Hacker Newsnew \\| past \\| comments \\| ask \\| show \\| jobs \\| submit \\| login \n\n \\| 1\\. \\| DeepSeek search and fetch – \\$0\\.75 per 1000 successful requests \\(deepseek\\.com\\) \n\\-\\-\\-\\|\\-\\-\\-\n188 poin…[公开版已截断，原文 4592 字符]",
+     "title": "Hacker News",
+     "content_length": 4592
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 4592,
+    "title": "Hacker News",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python"
+   },
+   "resp": {
+    "status": 504,
+    "ms": 30576,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "Request timeout (request_id: f78db408-243b-45f9-875e-469d6e1dedac)",
+      "type": "gateway_timeout_error",
+      "param": null,
+      "code": "gateway_timeout_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "Request timeout (request_id: f78db408-243b-45f9-875e-469d6e1dedac)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://www.anthropic.com/news"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 3471,
+    "retries": 0,
+    "body": {
+     "content": "Announcements\n\nWe’re launching a new\\, expanded version of our Cyber Verification Program\\, which makes advanced cyber capabilities and reduced blocking classifiers available to qualifying security pr…[公开版已截断，原文 213 字符]",
+     "title": "Newsroom",
+     "content_length": 213
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 213,
+    "title": "Newsroom",
+    "thin": true,
+    "err": "正文过短（213 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·常见",
+    "url": "https://openai.com/news/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 481,
+    "retries": 0,
+    "body": {
+     "content": "研究2026年10月15日\n公司2026年10月15日\n安全2026年10月8日\n产品2026年10月7日\n安全2026年10月7日\n研究2026年10月6日\n公司2026年10月6日\n安全2026年10月5日",
+     "title": "OpenAI 新闻",
+     "content_length": 105
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 105,
+    "title": "OpenAI 新闻",
+    "thin": true,
+    "err": "正文过短（105 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.reddit.com/r/LocalLLaMA/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 378,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: 422194ab-a665-466c-ba72-37594907c7b5)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: 422194ab-a665-466c-ba72-37594907c7b5)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://x.com/AnthropicAI"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 4628,
+    "retries": 0,
+    "body": {
+     "content": "Anthropic\n\n1\\,723 posts\n\n\\- New from our STEM Fellows Program\\: Designing more efficient quantum circuits with Claude\\. Given plain\\-language instructions\\, Claude Mythos 5 designed quantum circuits t…[公开版已截断，原文 1644 字符]",
+     "title": "X 上的 Anthropic (@AnthropicAI)",
+     "content_length": 1644
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 1644,
+    "title": "X 上的 Anthropic (@AnthropicAI)",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://medium.com/"
+   },
+   "resp": {
+    "status": 504,
+    "ms": 30571,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "Request timeout (request_id: fa263d5a-f200-4131-8568-91be334ea488)",
+      "type": "gateway_timeout_error",
+      "param": null,
+      "code": "gateway_timeout_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "Request timeout (request_id: fa263d5a-f200-4131-8568-91be334ea488)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.nytimes.com/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 4945,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: 6dcd4970-79ab-4f56-8ad8-0ea89cda010c)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: 6dcd4970-79ab-4f56-8ad8-0ea89cda010c)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.wsj.com/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 3454,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: ecbb5c17-3a1c-47e1-9426-c04cec64685c)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: ecbb5c17-3a1c-47e1-9426-c04cec64685c)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.ft.com/"
+   },
+   "resp": {
+    "status": 504,
+    "ms": 30487,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "Request timeout (request_id: 771c6ecf-b4b1-4385-8979-69c91c7a2d0f)",
+      "type": "gateway_timeout_error",
+      "param": null,
+      "code": "gateway_timeout_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "Request timeout (request_id: 771c6ecf-b4b1-4385-8979-69c91c7a2d0f)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.bloomberg.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 444,
+    "retries": 0,
+    "body": {
+     "content": "Connecting decision makers to a dynamic network of information\\, people and ideas\\, Bloomberg quickly and accurately delivers business and financial information\\, news and insight around the world",
+     "title": "Bloomberg Asia",
+     "content_length": 196
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 196,
+    "title": "Bloomberg Asia",
+    "thin": true,
+    "err": "正文过短（196 字符）"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 6191,
+    "retries": 0,
+    "body": {
+     "content": "\\# Rick Astley \\- Never Gonna Give You Up \\(Official Video\\) \\(4K Remaster\\)\n\n\\#\\# 评论\n\n\\#\\# 评论245万\n\n\\#\\# 在此视频中\n\n\\#\\# Rick Astley \\- Never Gonna Give You Up \\(Official Video\\) \\(4K Remaster\\)\n\n1948万赞\n\n…[公开版已截断，原文 435 字符]",
+     "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+     "content_length": 435
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 435,
+    "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.instagram.com/nasa/"
+   },
+   "resp": {
+    "status": 404,
+    "ms": 376,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "failed to fetch URL (request_id: ba750e7a-1ab6-4216-8142-2fb8dde36883)",
+      "type": "not_found_error",
+      "param": null,
+      "code": "invalid_request_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "failed to fetch URL (request_id: ba750e7a-1ab6-4216-8142-2fb8dde36883)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.linkedin.com/company/anthropicresearch/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 6243,
+    "retries": 0,
+    "body": {
+     "content": "\\# Anthropic\n\n\\#\\# 研究服务\n\n\\#\\#\\#\\# Anthropic is an AI safety and research company working to build reliable\\, interpretable\\, and steerable AI systems\\.\n\n\\#\\# 关于我们\n\nWe\\'re an AI research company that b…[公开版已截断，原文 11649 字符]",
+     "title": "Anthropic | 领英",
+     "content_length": 11649
+    }
+   },
+   "j": {
+    "ok": true,
+    "len": 11649,
+    "title": "Anthropic | 领英",
+    "thin": false,
+    "err": ""
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://www.quora.com/"
+   },
+   "resp": {
+    "status": 504,
+    "ms": 30495,
+    "retries": 0,
+    "body": {
+     "error": {
+      "message": "Request timeout (request_id: 9f4aa085-09bb-44e6-b184-126d09bac8f0)",
+      "type": "gateway_timeout_error",
+      "param": null,
+      "code": "gateway_timeout_error"
+     }
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 0,
+    "title": "",
+    "thin": false,
+    "err": "Request timeout (request_id: 9f4aa085-09bb-44e6-b184-126d09bac8f0)"
+   }
+  },
+  {
+   "item": {
+    "group": "海外·难抓",
+    "url": "https://substack.com/"
+   },
+   "resp": {
+    "status": 200,
+    "ms": 4600,
+    "retries": 0,
+    "body": {
+     "content": "You can spend 5 years\\, working harder than anyone else\\, writing the best book in the world\\, but if nobody knows about it\\, then you will not be a successful author\\.\n\nThis is the downfall of most c…[公开版已截断，原文 273 字符]",
+     "title": "Substack",
+     "content_length": 273
+    }
+   },
+   "j": {
+    "ok": false,
+    "len": 273,
+    "title": "Substack",
+    "thin": true,
+    "err": "正文过短（273 字符）"
+   }
+  }
+ ],
+ "summary": {
+  "国内": {
+   "n": 12,
+   "okRate": 0.4166666666666667,
+   "p50": 6259,
+   "p95": 13645,
+   "medLen": 3424
+  },
+  "海外·常见": {
+   "n": 12,
+   "okRate": 0.5833333333333334,
+   "p50": 3477,
+   "p95": 30576,
+   "medLen": 4046
+  },
+  "海外·难抓": {
+   "n": 12,
+   "okRate": 0.25,
+   "p50": 4945,
+   "p95": 30571,
+   "medLen": 1644
+  }
+ },
+ "stopped": false
+}
