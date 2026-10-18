@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
-from server import ROOT, call_deepseek, load_key
+from server import ROOT, call_deepseek, load_key, write_manifests
 
 RUNS_DIR = ROOT / "results"
 
@@ -142,6 +142,7 @@ def main():
     RUNS_DIR.mkdir(exist_ok=True)
     out = RUNS_DIR / f"{run['id']}.json"
     out.write_text(json.dumps(run, ensure_ascii=False, indent=1))
+    write_manifests()
     ok = sum(1 for r in run["rows"] if r["resp"]["status"] == 200)
     print(f"完成：{ok}/{len(run['rows'])} 成功 → {out.relative_to(ROOT)}")
 

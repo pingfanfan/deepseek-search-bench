@@ -1,27 +1,39 @@
 # deepseek-search-bench
 
-一个测试 [DeepSeek Search / Fetch API](https://api-docs.deepseek.com/guides/search) 的小工具。它会跑一批容易被 SEO / GEO 污染的问题，把每条结果的信源归类，再和 API 自带的 `authority`（权威度）对照，看它对垃圾站、山寨下载站和软文分别挡得怎么样。
+**在线使用：https://pingfanfan.github.io/deepseek-search-bench/** （填自己的 API key 即可）
 
-只依赖 Python 3.9+ 标准库，不用装任何包。
+一个测试 [DeepSeek Search / Fetch API](https://api-docs.deepseek.com/guides/search) 的小工具。它会跑一批容易被 SEO / GEO 污染的问题，把每条结果的信源归类，再和 API 自带的 `authority`（权威度）对照，看它对垃圾站、山寨下载站和软文分别挡得怎么样。
 
 ![GEO 排名题的搜索结果](docs/shot-2-geo.png)
 
-## 快速开始
+## 直接在线用（推荐）
 
-```bash
-export DEEPSEEK_API_KEY=sk-...        # 也可以写进同目录的 .env
-python3 server.py                     # 打开 http://localhost:8790
-```
+打开 **https://pingfanfan.github.io/deepseek-search-bench/**，在顶部填上你自己的 DeepSeek API key，就可以开始测，不用装任何东西。
+
+- key 只存在你自己的浏览器里。请求从浏览器直接发到 `api.deepseek.com`，不经过任何其他服务器。页面是纯静态的，源码就是这个仓库里的 `index.html`。
+- 勾选「记住」后，key 存在浏览器的 localStorage 里；不勾选的话，关掉页面就清空。
+- 你自己跑的记录存在浏览器的 IndexedDB 里。可以导出成 JSON 发给别人，对方在「历史对比」页导入就能看。
+- 仓库里自带了一批示例结果（2026-10-18 那次运行），不填 key 也能浏览。
 
 网页有三个页签：
 
-- **批量测试**：选测试集后一键跑完，按分组或难度汇总，点开任意一行能看到排名、权威度和摘要。
-- **单次调试**：手动调 Search（支持 `site:`、`lang:`、`after:` 和 `localization`）或 Fetch。
-- **历史对比**：每次运行自动存进 `results/`，可以横向比较。
+- **批量测试**：选测试集后一键跑完，可以按分组或按难度汇总。点开任意一行，能看到排名、权威度和摘要。
+- **单次调试**：手动调用 Search 或 Fetch。Search 支持 `site:`、`lang:`、`after:` 和 `localization`。
+- **历史对比**：横向对比多次运行的结果。
 
-链接里可以带参数直接定位，方便分享和截图，例如 `/?run=<结果id>&open=43&by=level`。
+链接里可以带参数直接定位到某次运行的某一行，方便分享和截图，例如 `?run=<结果id>&open=43&by=level`。
+
+## 本地打开
+
+```bash
+python3 server.py      # 打开 http://localhost:8790，同样在网页里填 key
+```
+
+注意，直接双击 `index.html` 打不开：浏览器不允许 `file://` 页面读取本地的 JSON 文件，必须通过 HTTP 访问。
 
 ## 命令行复现文章里的分析
+
+命令行只依赖 Python 3.9+ 标准库，key 从环境变量 `DEEPSEEK_API_KEY` 或 `.env` 文件读取。
 
 ```bash
 # 1. 跑易污染问题集（63 题）。中文题指定国内 IP，英文题指定美国 IP
@@ -79,8 +91,8 @@ python3 analyze.py results/<第1步的结果>.json --compare results/<第2步的
 ## 文件结构
 
 ```
-server.py      本地代理与网页后端（key 只留在本机）
-index.html     测试台页面
+index.html     测试台页面（纯静态，浏览器直连 DeepSeek）
+server.py      本地静态服务 + 命令行共用的请求函数
 bench.py       命令行运行器（支持对照引擎、按语言设置 IP）
 analyze.py     信源构成分析
 domains.json   域名分类表

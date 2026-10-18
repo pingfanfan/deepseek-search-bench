@@ -88,9 +88,21 @@ details summary { cursor: pointer; color: var(--muted); font-size: 12px; margin-
 <div class="wrap">
   <header>
     <h1>DeepSeek Search / Fetch 测试台</h1>
-    <span id="keyPill" class="pill">检查 key…</span>
     <span class="sub">按次计费 $0.75 / 千次成功请求，限流 5 QPS</span>
   </header>
+
+  <div class="panel keybar">
+    <div class="row">
+      <label class="f" style="flex:1;min-width:240px">DeepSeek API key
+        <input id="keyInput" type="password" autocomplete="off" placeholder="sk-…（在 platform.deepseek.com 申请）">
+      </label>
+      <label class="f" style="flex-direction:row;align-items:center;gap:6px;padding-bottom:7px">
+        <input id="keyRemember" type="checkbox"> 记在这台电脑的浏览器里
+      </label>
+      <span id="keyPill" class="pill bad" style="margin-bottom:7px">未填写</span>
+    </div>
+    <div class="desc">key 只存在你自己的浏览器里，请求从浏览器直接发到 api.deepseek.com，不经过任何其他服务器。不勾选「记住」的话，关掉页面就忘掉。<a href="https://github.com/pingfanfan/deepseek-search-bench" target="_blank" rel="noopener">源代码</a></div>
+  </div>
 
   <nav>
     <button data-tab="batch" class="on">批量测试</button>
@@ -187,6 +199,11 @@ https://www.reddit.com/r/programming/"></textarea>
   <!-- 历史 -->
   <section id="tab-history" class="hidden">
     <div class="panel">
+      <div class="toolbar">
+        <span class="sub">你跑的记录只存在这个浏览器里，换电脑前记得「导出」。别人导出的结果文件可以在这里导入。</span>
+        <span class="spacer"></span>
+        <label class="btn">导入结果文件<input id="importInput" type="file" accept=".json" multiple hidden></label>
+      </div>
       <div class="scroll"><table>
         <thead><tr><th>时间</th><th>测试集</th><th>各组结果</th><th class="num">P50 耗时</th><th></th></tr></thead>
         <tbody id="histBody"></tbody>
@@ -234,9 +251,89 @@ const pc = x => x == null ? '–' : Math.round(x * 100) + '%';
 const quant = (arr, q) => { if (!arr.length) return null; const s = [...arr].sort((a, b) => a - b); return s[Math.min(s.length - 1, Math.floor(q * s.length))]; };
 const fmtMs = ms => ms == null ? '–' : ms >= 1000 ? (ms / 1000).toFixed(1) + 's' : ms + 'ms';
 
+// ---------- 数据层：全部在浏览器里完成，没有后端 ----------
+// 原来的本地代理接口（/api/...）在这里用浏览器能力模拟：搜索直连 DeepSeek，历史存 IndexedDB，测试集读静态 JSON
+const DS_BASE = 'https://api.deepseek.com/v1/tools';
+const KEY_STORE = 'ds_bench_key';
+let apiKey = '';
+try { apiKey = localStorage.getItem(KEY_STORE) || ''; } catch {}
+
+async function callDeepSeek(tool, payload) {
+  let retries = 0;
+  while (true) {
+    const t0 = performance.now();
+    let status = 0, body;
+    try {
+      const r = await fetch(`${DS_BASE}/${tool}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      status = r.status;
+      try { body = await r.json(); } catch { body = { error: { message: `HTTP ${status}，返回的不是 JSON` } }; }
+    } catch (e) {
+      body = { error: { message: '网络错误：' + e.message } };
+    }
+    const ms = Math.round(performance.now() - t0);
+    if (status === 429 && retries < 2) { retries++; await new Promise(r => setTimeout(r, 1500 * retries)); continue; }
+    return { status, ms, retries, body };
+  }
+}
+
+// IndexedDB：每条运行记录一个对象，按 id 存
+const idb = (() => {
+  let dbp;
+  const open = () => dbp ||= new Promise((res, rej) => {
+    const req = indexedDB.open('ds-bench', 1);
+    req.onupgradeneeded = () => req.result.createObjectStore('runs', { keyPath: 'id' });
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+  const tx = async (mode, fn) => {
+    const db = await open();
+    return new Promise((res, rej) => {
+      const t = db.transaction('runs', mode), req = fn(t.objectStore('runs'));
+      req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error);
+    });
+  };
+  return {
+    all: () => tx('readonly', s => s.getAll()).catch(() => []),
+    get: id => tx('readonly', s => s.get(id)).catch(() => null),
+    put: run => tx('readwrite', s => s.put(run)),
+    del: id => tx('readwrite', s => s.delete(id)),
+  };
+})();
+
+const getJSON = async path => { const r = await fetch(path); if (!r.ok) throw new Error(path + ' ' + r.status); return r.json(); };
+const runMeta = r => ({ id: r.id, set_name: r.set_name, type: r.type, started: r.started, summary: r.summary, options: r.options });
+
 async function api(path, body) {
-  const r = await fetch(path, body ? { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) } : {});
-  return r.json();
+  if (path === '/api/search' || path === '/api/fetch') {
+    if (!apiKey) return { status: 0, ms: 0, retries: 0, body: { error: { message: '请先在页面顶部填写 DeepSeek API key' } } };
+    return callDeepSeek(path.slice(5), body);
+  }
+  if (path === '/api/status') return { has_key: !!apiKey };
+  if (path === '/api/domains') return getJSON('domains.json');
+  if (path === '/api/sets') {
+    const ids = await getJSON('sets/index.json');
+    return Promise.all(ids.map(async id => ({ ...(await getJSON(`sets/${id}.json`)), id })));
+  }
+  if (path === '/api/runs' && body) { await idb.put(body); return { ok: true }; }
+  if (path === '/api/runs') {
+    // 自己跑的记录在前，仓库自带的示例结果在后（只读）
+    const mine = (await idb.all()).map(r => ({ ...runMeta(r), local: true })).sort((a, b) => b.started.localeCompare(a.started));
+    let bundled = [];
+    try { bundled = (await getJSON('results/index.json')).map(r => ({ ...r, local: false })); } catch {}
+    return [...mine, ...bundled];
+  }
+  const m = path.match(/^\/api\/runs\/([\w-]+)$/);
+  if (m) return (await idb.get(m[1])) || getJSON(`results/${m[1]}.json`);
+  throw new Error('unknown ' + path);
+}
+
+function updateKeyPill() {
+  $('#keyPill').textContent = apiKey ? 'key 已填写' : '未填写';
+  $('#keyPill').className = 'pill ' + (apiKey ? 'ok' : 'bad');
 }
 
 // ---------- 判定 ----------
@@ -513,6 +610,7 @@ async function runOne(s, r, count) {
 }
 
 async function runBatch() {
+  if (!apiKey) { alert('请先在页面顶部填写 DeepSeek API key'); $('#keyInput').focus(); return; }
   const s = selectedSet();
   if (!s || !s.items.length) return alert('测试集为空');
   const conc = Math.max(1, Math.min(5, +$('#conc').value || 3));
@@ -580,8 +678,23 @@ async function loadHistory() {
     return `<tr><td style="white-space:nowrap">${esc(new Date(r.started).toLocaleString())}</td>
       <td>${esc(r.set_name)}<div class="sub">${TYPE_LABEL[r.type] || ''}</div></td>
       <td>${groups}</td><td class="num">${p50}</td>
-      <td style="white-space:nowrap"><button class="btn" data-load="${esc(r.id)}">查看</button> <button class="btn" data-del="${esc(r.id)}">删除</button></td></tr>`;
+      <td style="white-space:nowrap"><button class="btn" data-load="${esc(r.id)}">查看</button> ${r.local
+        ? `<button class="btn" data-export="${esc(r.id)}">导出</button> <button class="btn" data-del="${esc(r.id)}">删除</button>`
+        : '<span class="tag mute">示例数据</span>'}</td></tr>`;
   }).join('') : '<tr><td class="empty" colspan="5">还没有测试记录</td></tr>';
+}
+async function exportRun(id) {
+  const run = await api('/api/runs/' + id);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(run)], { type: 'application/json' }));
+  a.download = `${id}.json`; a.click();
+}
+async function importRuns(files) {
+  for (const f of files) {
+    try { const run = JSON.parse(await f.text()); if (run.id && run.rows) await idb.put(run); }
+    catch (e) { alert(`${f.name} 不是有效的结果文件`); }
+  }
+  loadHistory();
 }
 
 // ---------- 单次调试 ----------
@@ -633,11 +746,22 @@ $('#tbody').onclick = e => {
 $('#histBody').onclick = async e => {
   const id = e.target.dataset.load, del = e.target.dataset.del;
   if (id) { await loadRun(id); showTab('batch'); }
-  if (del && confirm('删除这条记录？')) { await fetch('/api/runs/' + del, { method: 'DELETE' }); loadHistory(); }
+  if (del && confirm('删除这条记录？')) { await idb.del(del); loadHistory(); }
+  if (e.target.dataset.export) exportRun(e.target.dataset.export);
 };
 // 命令行 bench.py 跑出的结果没有 j（判定），载入时补算
 async function loadRun(id) {
   current = await api('/api/runs/' + id);
+  // 找到对应测试集：选中它，并用最新的判定条件（expect_domain 等）重新判定
+  const set = sets.find(s => current.set_name?.startsWith(s.name));
+  if (set) {
+    $('#setSel').value = set.id; onSetChange();
+    const latest = Object.fromEntries(set.items.map(it => [it.query || it.url, it]));
+    for (const r of current.rows) {
+      const it = latest[r.item.query || r.item.url];
+      if (it && current.type === 'search') { r.item = it; r.j = null; }
+    }
+  }
   for (const r of current.rows) {
     if (r.j || !r.resp) continue;
     if (current.type === 'fetch') r.j = judgeFetch(r.resp);
@@ -653,9 +777,20 @@ $('#dQuery').onkeydown = e => e.key === 'Enter' && debugSearch();
 $('#dUrl').onkeydown = e => e.key === 'Enter' && debugFetch();
 
 (async () => {
-  const st = await api('/api/status');
-  $('#keyPill').textContent = st.has_key ? 'API key 已加载' : '未找到 DEEPSEEK_API_KEY';
-  $('#keyPill').className = 'pill ' + (st.has_key ? 'ok' : 'bad');
+  $('#keyInput').value = apiKey;
+  try { $('#keyRemember').checked = !!localStorage.getItem(KEY_STORE); } catch {}
+  const saveKey = () => {
+    apiKey = $('#keyInput').value.trim();
+    try {
+      if ($('#keyRemember').checked && apiKey) localStorage.setItem(KEY_STORE, apiKey);
+      else localStorage.removeItem(KEY_STORE);
+    } catch {}
+    updateKeyPill();
+  };
+  $('#keyInput').oninput = saveKey;
+  $('#keyRemember').onchange = saveKey;
+  updateKeyPill();
+  $('#importInput').onchange = e => importRuns(e.target.files);
   try {
     const dom = await api('/api/domains');
     const bad = dom.categories.filter(c => ['第三方下载站/山寨站', '垃圾/灰产'].includes(c.name)).flatMap(c => c.domains);
