@@ -78,6 +78,12 @@ pre { font-family: var(--mono); font-size: 12px; white-space: pre-wrap; word-bre
 .seg button { border: 0; background: var(--panel); color: var(--muted); padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; }
 .seg button.on { background: var(--accent-soft); color: var(--accent); }
 .hidden { display: none !important; }
+.demo { background: var(--accent-soft); border-color: transparent; font-size: 13px; }
+.demo b { font-weight: 600; }
+.demo .runs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.demo .runs button { font: inherit; font-size: 12px; padding: 3px 10px; border-radius: 99px; border: 1px solid var(--line);
+  background: var(--panel); color: var(--ink); cursor: pointer; }
+.demo .runs button.on { border-color: var(--accent); color: var(--accent); }
 .empty { color: var(--muted); text-align: center; padding: 28px 0; }
 .scroll { overflow-x: auto; }
 details summary { cursor: pointer; color: var(--muted); font-size: 12px; margin-top: 8px; }
@@ -101,7 +107,7 @@ details summary { cursor: pointer; color: var(--muted); font-size: 12px; margin-
       </label>
       <span id="keyPill" class="pill bad" style="margin-bottom:7px">未填写</span>
     </div>
-    <div class="desc">key 只存在你自己的浏览器里，请求从浏览器直接发到 api.deepseek.com，不经过任何其他服务器。不勾选「记住」的话，关掉页面就忘掉。<a href="https://github.com/pingfanfan/deepseek-search-bench" target="_blank" rel="noopener">源代码</a></div>
+    <div class="desc">key 只存在你自己的浏览器里，请求从浏览器直接发到 api.deepseek.com，不经过任何其他服务器。不勾选「记住」的话，关掉页面就忘掉。不填 key 也能浏览下面的示例数据。<a href="https://github.com/pingfanfan/deepseek-search-bench" target="_blank" rel="noopener">源代码</a></div>
   </div>
 
   <nav>
@@ -141,6 +147,7 @@ https://www.reddit.com/r/programming/"></textarea>
       <div class="progress"><div id="bar"></div></div>
     </div>
 
+    <div class="panel demo hidden" id="demoNote"></div>
     <div class="toolbar hidden" id="sumBar">
       <span class="sub">汇总方式</span>
       <div class="seg" id="sumSeg"><button data-by="group" class="on">按分组</button><button data-by="level">按难度</button></div>
@@ -624,6 +631,7 @@ async function runBatch() {
     rows: s.items.map(item => ({ item, resp: null, j: null })),
   };
   stopFlag = false; openRow = null;
+  $('#demoNote').classList.add('hidden');
   $('#runBtn').disabled = true; $('#stopBtn').disabled = false;
   render();
   let next = 0, lastPaint = 0;
@@ -769,7 +777,27 @@ async function loadRun(id) {
     else r.j = judgeSearch(r.item, r.resp);
   }
   openRow = null; render();
+  showDemoNote(id);
 }
+
+// 打开页面时默认展示作者那次实测（仓库自带的示例结果），不用填 key 就能看
+const DEFAULT_RUN = '20261018-113006-search-pollution-loc';
+let bundledRuns = [];
+async function showDemoNote(id) {
+  const box = $('#demoNote');
+  const local = await idb.get(id);
+  if (local) { box.classList.add('hidden'); return; }
+  if (!bundledRuns.length) { try { bundledRuns = await getJSON('results/index.json'); } catch {} }
+  const base = r => r.set_name.replace(/^(Search|Fetch) · /, '').replace(/（IP .*?）/, '');
+  // 同一个测试集跑过多次时（如指定 IP 与否），在名字后面标出区别
+  const label = r => base(r) + (/（IP /.test(r.set_name) ? '（指定 IP）'
+    : bundledRuns.filter(x => base(x) === base(r)).length > 1 ? '（不指定 IP）' : '');
+  box.innerHTML = `<b>正在展示作者的实测数据</b>：${esc(label(current))}，${esc(new Date(current.started).toLocaleString())} 运行。
+    不用填 key 就能翻看，点表格里任意一行看详情；想跑你自己的，在上面填 key 再点「开始测试」。
+    <div class="runs">${bundledRuns.map(r => `<button data-demo="${esc(r.id)}" class="${r.id === id ? 'on' : ''}">${esc(label(r))}</button>`).join('')}</div>`;
+  box.classList.remove('hidden');
+}
+$('#demoNote').onclick = e => { const id = e.target.dataset.demo; if (id) loadRun(id); };
 
 $('#dSearchBtn').onclick = debugSearch;
 $('#dFetchBtn').onclick = debugFetch;
@@ -809,6 +837,8 @@ $('#dUrl').onkeydown = e => e.key === 'Enter' && debugFetch();
     if (qs.get('filter')) document.querySelector(`#filterSeg button[data-f="${qs.get('filter')}"]`)?.click();
     await loadRun(qs.get('run'));
     if (qs.get('open')) { openRow = +qs.get('open'); renderRows(); }
+  } else {
+    await loadRun(DEFAULT_RUN).catch(() => {});
   }
 })();
 </script>
